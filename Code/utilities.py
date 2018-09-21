@@ -1,5 +1,6 @@
 def print_error(string_error,line_index=""):
 
+
     if (line_index != ""):
         print ">: Error Line:{} - ({})".format(line_index,string_error)
     else:
@@ -29,8 +30,10 @@ def import_program(file_name):
     pc = 1
     for line in file:
         content = ""
+        # print line.strip()
         out_line = line.strip().replace("\t","").rstrip()
         out_line = out_line.replace("  "," ")
+
         # remove comments
         if (out_line.__contains__("//")):
             index_comment = line.index("//")
@@ -38,6 +41,11 @@ def import_program(file_name):
 
         while (out_line.endswith(" ")):
             out_line = out_line[:-1]
+
+        while (out_line.startswith(" ")):
+            out_line = out_line[2:]
+        # print out_line
+
 
         # continue if the line is empty
         if (out_line == ""):
@@ -60,7 +68,11 @@ def import_program(file_name):
             index_s = out_line.index("(")
             index_f = out_line.index(")")
 
-            content = out_line[index_s + 1:index_f]
+            # if it is hex
+            if (out_line[index_s+1] == "#"):
+                content = str(int(out_line[index_s + 2:index_f],16))
+            else:
+                content = out_line[index_s + 1:index_f]
             out_line = out_line[:index_s + 1] + "DIR" + out_line[index_f:]
 
         while (out_line.endswith(" ")):
@@ -68,8 +80,27 @@ def import_program(file_name):
 
         # print "PC:",str(pc)+" -",out_line
         if out_line.__contains__(','):
-            if out_line[out_line.index(',') + 1:].isdigit():
+            char = out_line[out_line.index(',') + 1]
+            # print char
+            if (char.isdigit()):
+                # print char
+                if out_line[out_line.index(',') + 1:].isdigit():
+                    content = out_line[out_line.index(',') + 1:]
+                    out_line = out_line[: out_line.index(",") + 1] + "LIT"
+            elif (char == "#"):
+                # print (out_line[out_line.index(',') + 2:])
+
+                try:
+                    int_val = str(int((out_line[out_line.index(',') + 2:]),16))
+                    content = int_val
+                except:
+                    content = 0
+
+
+                # content = str(int((out_line[out_line.index(',') + 2:]),16))
                 out_line = out_line[: out_line.index(",") + 1] + "LIT"
+
+
 
         # print "PC:", str(pc) + " -", out_line
 
@@ -79,19 +110,12 @@ def import_program(file_name):
             out_line = out_line_split[0] + " DIR"
             content = out_line_split[1]
 
-
-
-
-
         # print line.strip()
         # print out_line+": Content = "+str(content)+"\n"
 
 
         program_list.append((out_line,str(content),pc))
         # print out_line
-
-
-
 
 
         pc+=1

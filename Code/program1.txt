@@ -1,7 +1,7 @@
 
 //Asignar palabra letra por letra en memoria
-MOV A,114 //R
-MOV (10),A
+MOV A,#0x72 //R #0x72 = 114
+MOV (#0xA),A // #0xA = 10
 MOV A,97 //A
 MOV (11),A
 MOV A,100 //D
