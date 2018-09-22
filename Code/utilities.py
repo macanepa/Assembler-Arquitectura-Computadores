@@ -18,7 +18,14 @@ def import_opcodes(file_name):
 def import_program(file_name):
 
     program_list = list()
+    data_dict = dict()
+    memory_data_index = 0
+
+    load_data = False
     label_list = dict()
+
+
+
 
     # literal for the operation
     content = ""
@@ -55,7 +62,17 @@ def import_program(file_name):
         # check if line contain a label
         if (out_line.__contains__(':')):
             index_label = out_line.index(":")
-            label_list[out_line[:index_label]] = pc
+            label = out_line[:index_label]
+
+            if (label == "DATA"):
+                load_data = True
+            else:
+                load_data = False
+
+            label_list[label] = pc
+
+
+
             if (out_line[index_label+1:] != ""):
                 out_line = out_line[index_label+1:]
             else:
@@ -71,9 +88,13 @@ def import_program(file_name):
             # if it is hex
             if (out_line[index_s+1] == "#"):
                 content = str(int(out_line[index_s + 2:index_f],16))
+                # corrected_content = str(int(out_line[index_s + 2:index_f],16)+memory_data_index)
             else:
-                content = out_line[index_s + 1:index_f]
+                content =str(int(out_line[index_s + 1:index_f]))
+                # corrected_content = str(int(out_line[index_s + 1:index_f])+memory_data_index)
             out_line = out_line[:index_s + 1] + "DIR" + out_line[index_f:]
+
+
 
         while (out_line.endswith(" ")):
             out_line = out_line[:-1]
@@ -114,7 +135,13 @@ def import_program(file_name):
         # print out_line+": Content = "+str(content)+"\n"
 
 
-        program_list.append((out_line,str(content),pc))
+        if(load_data):
+            var_name = out_line.split(" ")[0]
+            var_value = out_line.split(" ")[1]
+            data_dict[var_name]=[memory_data_index,var_value]
+            memory_data_index+=1
+        else:
+            program_list.append((out_line,str(content),pc))
         # print out_line
 
 
@@ -122,6 +149,6 @@ def import_program(file_name):
 
     file.close()
 
-    return program_list,label_list
+    return program_list,label_list,data_dict
 
 

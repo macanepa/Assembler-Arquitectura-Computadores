@@ -1,8 +1,8 @@
 //Inicia las variables a utilizar
 DATA:
-    MOV A,3
-
-
+    RES 0
+    b0 1
+    wiwi 0
 CODE:
     //Asignar palabra letra por letra en memoria
     MOV A,#0x72 //R #0x72 = 114

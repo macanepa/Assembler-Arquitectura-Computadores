@@ -3,6 +3,7 @@ import utilities
 program_list = []
 opcodes_list = []
 label_dict = {}
+data_dict = {}
 
 out_list = []
 
@@ -20,13 +21,25 @@ while True:
         continue
     break
 
-(program_list, label_dict) = utilities.import_program(file_name)
+(program_list, label_dict, data_dict) = utilities.import_program(file_name)
+
 
 
 
 n_out = 0
 out_string = ""
 error_counter = 0
+
+memory_data_index = 0
+# Assign the variables to memory
+# for variable in data_dict:
+    # print variable, data_dict[variable]
+    # data_dict[variable][0]=memory_data_index
+    # print variable, data_dict[variable]
+    # memory_data_index+=1
+print data_dict
+
+
 for line in program_list:
     lit = 0
     flag = False
@@ -57,7 +70,7 @@ for line in program_list:
                 error_counter+=1
 
 
-            # print line
+            print line
             # print opcode[0]+" - Cont: "+str(lit)
             lit = '{0:07b}'.format(int(lit))
             # print ">: {}_{}".format(str(lit),str(opcode[1]))+"\n"
@@ -79,6 +92,7 @@ n_code = 0
 
 for line in file:
     n_code+=1
+
 
 
 
