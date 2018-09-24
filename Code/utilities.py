@@ -6,7 +6,6 @@ def print_error(string_error,line_index=""):
     else:
         print ">: Error:{} - ({})".format(line_index, string_error)
 
-
 def import_opcodes(file_name):
     file = open(file_name, "r")
     opcodes_list = list()
@@ -87,11 +86,13 @@ def import_program(file_name):
 
             # if it is hex
             if (out_line[index_s+1] == "#"):
-                content = str(int(out_line[index_s + 2:index_f],16))
-                # corrected_content = str(int(out_line[index_s + 2:index_f],16)+memory_data_index)
+                content = str(int(out_line[index_s + 2:index_f],16))+"D"
+            elif ((out_line[index_s + 1:index_f]).isdigit()):
+                content =str((out_line[index_s + 1:index_f]))+"D"
             else:
-                content =str(int(out_line[index_s + 1:index_f]))
-                # corrected_content = str(int(out_line[index_s + 1:index_f])+memory_data_index)
+            #     if not, this means its a variable
+                content = (out_line[index_s + 1:index_f])
+
             out_line = out_line[:index_s + 1] + "DIR" + out_line[index_f:]
 
 
@@ -144,11 +145,24 @@ def import_program(file_name):
             program_list.append((out_line,str(content),pc))
         # print out_line
 
-
         pc+=1
 
     file.close()
 
     return program_list,label_list,data_dict
 
+
+
+
+def sort_data(data_dict):
+
+    def get_key(item):
+        return item[0]
+
+    temp_list = []
+    for data in data_dict:
+        temp_list.append(data_dict[data])
+
+    sorted_list = sorted(temp_list, key=get_key)
+    return sorted_list
 
