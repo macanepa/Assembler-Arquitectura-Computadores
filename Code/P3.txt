@@ -1,0 +1,56 @@
+DATA:
+Inicio [0x00]
+R [-]
+G [-]
+BL [-]
+Filas
+Col
+CR
+N
+
+CODE:
+	MOV A,(Filas)
+	MOV B,(Col)
+	SUB B,1
+mult:
+    MOV (N),A
+	CMP B,0
+	JGT mult
+	JEQ mult3
+
+mult3:
+    MOV A,(N)
+	SHL A,A
+	ADD A,(N)
+	MOV (N),A
+	JMP start1
+
+start1:	MOV A,(Inicio)
+start2:
+    MOV (R),A
+    ADD A,1
+//INC A no se puede incrementar A
+	MOV (G),A
+	ADD A,1
+//INC A
+	MOV (BL),A
+	MOV A,(R)
+	CMP A,(G)
+	JLE sig
+	CMP A,(BL)
+	JLE sig
+	MOV B,(CR)
+	INC B
+	MOV (CR),B
+    JMP sig
+
+sig:
+    MOV A,(BL)
+	CMP A,(N)
+	JEQ end
+    ADD A,1
+//INC A
+	JMP start2
+
+end:
+    MOV A,(CR)

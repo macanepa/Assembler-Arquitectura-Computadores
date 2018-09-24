@@ -39,7 +39,6 @@ def import_program(file_name):
         # print line.strip()
         out_line = line.strip().replace("\t","").rstrip()
         out_line = out_line.replace("  "," ")
-
         # remove comments
         if (out_line.__contains__("//")):
             index_comment = line.index("//")

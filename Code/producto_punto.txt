@@ -1,0 +1,75 @@
+DATA:
+
+Inicio1 0    //Valor escogido que indica el inicio del primer vector
+Inicio2 1
+Ini1 0    //Indicador que indicará en cuál elemento del primer vector estamos, que irá aumentando
+Ini2 0    //Indicador que indicará en cuál elemento del segundo vector estamos, que irá aumentando
+n 1            //Valor escogido del largo de los vectores
+
+pp 0              //Resultado del producto punto
+xx 0              //contador para multiplicar, toma el valor de cada elemento del segundo vector y va disminuyendo
+resx 0              //resultado temporal de la multiplicación.
+
+CODE:
+
+MOV A,4
+MOV (0),A // Vector 1
+
+MOV A,3
+MOV (1),A // Vector 2
+
+MOV A,(Inicio1)
+MOV (Ini1),A
+
+MOV A,(Inicio2)
+MOV (Ini2),A
+
+ciclo:
+MOV A,(Ini1) //Revisamos si terminamos el vector o no
+MOV B,(n)
+ADD B,(Inicio1)
+
+CMP A,B   //vamos a comparar A y B
+JGT end      //Si llegamos al final del vector termina el programa
+
+//Cargamos el elemento del segundo vector en el multiplicador
+MOV B,(Ini2)
+MOV B,(B)
+MOV (xx),B
+
+//Ciclo para multiplicar:
+mult:
+MOV A,0       //Revisamos si el multiplicador llegó a 0
+MOV B,(xx)
+
+CMP A,B   //vamos a comparar A y B
+JEQ cont      //Si son iguales terminamos de multiplicar
+
+SUB B,1
+MOV (xx),B
+
+MOV B,(Ini1)  //sumamos y guardamos el resultado en resx
+MOV A,(resx)
+ADD A,(B)
+MOV (resx),A
+
+JMP mult
+
+cont:
+MOV A,(pp)
+ADD A,(resx)
+MOV (pp),A
+MOV B,0
+MOV (resx),B
+
+MOV A,(Ini1) //Sumamos 1 a Ini1
+ADD A,1
+MOV (Ini1),A
+MOV B,(Ini2) //Sumamos 1 a Ini2
+ADD B,1
+MOV (Ini2),B
+
+JMP ciclo
+end:
+
+

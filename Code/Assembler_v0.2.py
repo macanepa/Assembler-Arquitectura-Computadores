@@ -12,8 +12,8 @@ opcodes_list = utilities.import_opcodes("opcode.txt")
 # import program to compile
 while True:
     try:
-        # file_name= raw_input("Insert name of file: ")
-        file_name = "sum.txt"
+        file_name= raw_input("Insert name of file: ")
+        # file_name = "P3.txt"
         file = open(file_name, "r")
     except:
         print error_manager.print_error("File '{}' not found!".format(file_name))
@@ -43,7 +43,7 @@ for line in program_list:
                 error_manager.add_error("Label: '{}' doesn't exist!".format(line[1]),line[2])
                 continue
         elif (line[1] not in data_dict) and (line[1] != ""):
-            error_manager.add_error("Variable: '{}' not declared!".format(line[1]))
+            error_manager.add_error("Variable: '{}' not declared!".format(line[1]),line[2])
 
 
     for opcode in opcodes_list:
@@ -90,7 +90,7 @@ write_data = utilities.sort_data(data_dict)
 print write_data
 
 for data in write_data:
-    out_file.write("{0:07b}_{0:07b}\n".format(int(data[0]),int(data[1])))
+    out_file.write("MEM_DIR: {}".format(int(data[0])) +  (" Value: {0:07b}\n".format(int(data[1]))))
 
 
 
@@ -103,6 +103,7 @@ for line in file:
     n_code+=1
 
 
+
 if(error_manager.get_num_errors() == 0):
 
 
@@ -113,3 +114,4 @@ if(error_manager.get_num_errors() == 0):
 else:
     error_manager.display_errors()
 
+print data_dict
