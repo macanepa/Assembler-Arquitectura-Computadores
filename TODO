@@ -1,0 +1,12 @@
+Implement function to format
+the lines of code so it's easier
+to execute the import program method
+
+Count # of lines of DATA
+Count # of lines of CODE
+
+The DATA is saved in .mem file
+    DIR_VALUE
+    Example:
+        00000001_00000011 //DIR = 1 val = 3
+        00000002_00000101 // DIR = 2 val = 5

@@ -3,7 +3,7 @@ DATA:
     RES 0
     b0 1
     wiwi 0
-    wawa opi
+    wawa 3
 CODE:
     //Asignar palabra letra por letra en memoria
     MOV A,#0x72 //R #0x72 = 114

@@ -150,9 +150,6 @@ def import_program(file_name):
 
     return program_list,label_list,data_dict
 
-
-
-
 def sort_data(data_dict):
 
     def get_key(item):
@@ -164,4 +161,3 @@ def sort_data(data_dict):
 
     sorted_list = sorted(temp_list, key=get_key)
     return sorted_list
-

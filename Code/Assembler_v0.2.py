@@ -12,8 +12,8 @@ opcodes_list = utilities.import_opcodes("opcode.txt")
 # import program to compile
 while True:
     try:
-        file_name= raw_input("Insert name of file: ")
-        # file_name = "P3.txt"
+        # file_name= raw_input("Insert name of file: ")
+        file_name = "program2.txt"
         file = open(file_name, "r")
     except:
         print error_manager.print_error("File '{}' not found!".format(file_name))
@@ -83,29 +83,26 @@ for line in program_list:
         error_manager.add_error("Instruction: '{}' doesn't exist!".format(line[0]),line[2])
 
 
-out_file = open(file_name.replace(".txt",".out"),"w")
 
-
+mem_file = open(file_name.replace(".txt",".mem"),"w")
 write_data = utilities.sort_data(data_dict)
-print write_data
-
 for data in write_data:
-    out_file.write("MEM_DIR: {}".format(int(data[0])) +  (" Value: {0:07b}\n".format(int(data[1]))))
+    mem_file.write("{0:07b}_".format(int(data[0])) +  ("{0:07b}\n".format(int(data[1]))))
+mem_file.close()
 
-
-
-out_file.write("\n"+out_string.strip())
+out_file = open(file_name.replace(".txt",".out"),"w")
+out_file.write(out_string.strip())
+out_file.close()
 
 n_data = 0
 n_code = 0
 
-for line in file:
-    n_code+=1
+n_data = data_dict.__len__()
+n_code = program_list.__len__()
 
 
 
 if(error_manager.get_num_errors() == 0):
-
 
     print "Program compiled succesfully!"
     print "# Lines of Data: {}".format(str(n_data))
@@ -113,5 +110,3 @@ if(error_manager.get_num_errors() == 0):
     print "# Lines of .out: {}".format(str(n_out))
 else:
     error_manager.display_errors()
-
-print data_dict
