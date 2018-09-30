@@ -1,0 +1,10 @@
+DATA:
+    a 0
+    b 3
+
+    c 4
+CODE:
+    MOV A,B
+    MOV A,(b)
+    MOV (a),A
+    MOV (1),B

@@ -24,6 +24,17 @@ def import_program(file_name):
     label_list = dict()
 
 
+    loading_data = False
+    loading_code = False
+
+
+    data_ini = 0
+    data_end = 0
+
+    code_ini = 0
+    code_end = 0
+
+    lines_info = [0,0]
 
 
     # literal for the operation
@@ -35,6 +46,8 @@ def import_program(file_name):
 
     pc = 1
     for line in file:
+
+
         content = ""
         # print line.strip()
         out_line = line.strip().replace("\t","").rstrip()
@@ -63,9 +76,16 @@ def import_program(file_name):
             label = out_line[:index_label]
 
             if (label == "DATA"):
+                data_ini = pc
                 load_data = True
             else:
                 load_data = False
+
+            if(label == "CODE"):
+                data_end = pc
+                code_ini = pc
+                loading_code = True
+                loading_data = False
 
             label_list[label] = pc
 
@@ -144,11 +164,17 @@ def import_program(file_name):
             program_list.append((out_line,str(content),pc))
         # print out_line
 
+
         pc+=1
+        code_end = pc
 
     file.close()
 
-    return program_list,label_list,data_dict
+    lines_info[0]= data_end - data_ini -1
+    lines_info[1]= program_list[-1][2] - code_ini
+
+    # print lines_info
+    return program_list,label_list,data_dict,lines_info
 
 def sort_data(data_dict):
 

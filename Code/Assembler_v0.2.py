@@ -13,15 +13,19 @@ opcodes_list = utilities.import_opcodes("opcode.txt")
 while True:
     try:
         # file_name= raw_input("Insert name of file: ")
-        file_name = "program2.txt"
+        file_name = "P1.txt"
+        # file_name = "producto_punto.txt"
         file = open(file_name, "r")
     except:
         print error_manager.print_error("File '{}' not found!".format(file_name))
         continue
     break
 
-(program_list, label_dict, data_dict) = utilities.import_program(file_name)
+lines_info = []
+(program_list, label_dict, data_dict, lines_info) = utilities.import_program(file_name)
 
+# use_offset separa la memoria de DATA y de CODE
+use_offset = False
 
 n_out = 0
 out_string = ""
@@ -57,7 +61,8 @@ for line in program_list:
 
                 if(line[1] != ''):
                     if(line[1][-1] == 'D'):
-                        lit+= data_dict.__len__()
+                        if(use_offset):
+                            lit+= data_dict.__len__()
             elif (not line[1].strip('D').isdigit()) and (line[1]!= ""):
                 try:
                     lit = int(label_dict[line[1]])
@@ -84,15 +89,8 @@ for line in program_list:
 
 
 
-mem_file = open(file_name.replace(".txt",".mem"),"w")
-write_data = utilities.sort_data(data_dict)
-for data in write_data:
-    mem_file.write("{0:07b}_".format(int(data[0])) +  ("{0:07b}\n".format(int(data[1]))))
-mem_file.close()
 
-out_file = open(file_name.replace(".txt",".out"),"w")
-out_file.write(out_string.strip())
-out_file.close()
+
 
 n_data = 0
 n_code = 0
@@ -104,9 +102,32 @@ n_code = program_list.__len__()
 
 if(error_manager.get_num_errors() == 0):
 
+    mem_file = open(file_name.replace(".txt", ".mem"), "w")
+    write_data = utilities.sort_data(data_dict)
+
+    for data in write_data:
+
+        directory = int(data[0])
+        data = int(data[1])
+
+        # MOV A,DATA
+        mem_file.write("{0:07b}_".format(data) + ("{}\n".format("0000010")))
+
+        # MOV DIR,A
+        mem_file.write("{0:07b}_".format(directory) + ("{}\n".format("0100111")))
+
+
+    mem_file.close()
+
+    out_file = open(file_name.replace(".txt", ".out"), "w")
+    out_file.write(out_string.strip())
+    out_file.close()
+
+
+
     print "Program compiled succesfully!"
-    print "# Lines of Data: {}".format(str(n_data))
-    print "# Lines of Code: {}".format(str(n_code))
+    print "# Lines of Data: {}".format(str(lines_info[0]))
+    print "# Lines of Code: {}".format(str(lines_info[1]))
     print "# Lines of .out: {}".format(str(n_out))
 else:
     error_manager.display_errors()

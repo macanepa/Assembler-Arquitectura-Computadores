@@ -10,3 +10,15 @@ The DATA is saved in .mem file
     Example:
         00000001_00000011 //DIR = 1 val = 3
         00000002_00000101 // DIR = 2 val = 5
+
+
+Add CALL, RET, PUSH, POP
+to Assembler
+
+
+
+Check which lines need to be counted in Code
+
+
+
+
