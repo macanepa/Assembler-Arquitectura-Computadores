@@ -1,0 +1,55 @@
+DATA:
+    Ini1 4 //Inicio Vector 1
+    Ini2 7 //Inicio Vector 2
+    n 3 //Largo Vector
+    pp 0 //Resultado producto punto
+    xx 0 //contador para mult, toma el valor de cada elemento del segundo vector y va disminuyendo
+    resx 0 //resultado temporal de la multiplicacion
+CODE:
+    ciclo:
+        MOV A,(n)
+        CMP A,0
+        JEQ end
+        //Restamos 1 a n:
+        SUB A,1
+        MOV (n),A
+
+
+        //Cargamos el elemento del segundo vector en el multiplicador
+        MOV B,(Ini2)
+        MOV B,(B)
+        MOV (xx),B
+
+    //Ciclo para multiplicar:
+    mult:
+        MOV A,0       //Revisamos si el multiplicador llegó a 0
+        MOV B,(xx)
+
+        CMP A,B
+        JEQ cont
+
+        SUB B,1
+        MOV (xx),B
+
+        MOV B,(Ini1)  //sumamos y guardamos el resultado en resx
+        MOV A,(resx)
+        ADD A,(B)
+        MOV (resx),A
+
+        JMP mult
+
+    cont:
+        MOV A,(pp)
+        ADD A,(resx)
+        MOV (pp),A
+        RST (resx)
+
+        MOV A,(Ini1) //Sumamos 1 a Ini1
+        ADD A,1
+        MOV (Ini1),A
+        MOV B,(Ini2) //Sumamos 1 a Ini2
+        ADD B,1
+        MOV (Ini2),B
+
+        JMP ciclo
+    end:

@@ -36,13 +36,12 @@ error_counter = 0
 for line in program_list:
     lit = 0
     flag = False
-
+    # print line
     # if content is label and doesn't exist then...
     if(not line[1].rstrip('D').isdigit()):
 
 
-
-        if (line[0][0] == "J" or line[0][0] == "C"):
+        if (line[0][0] == "J" or (line[0].split(" ")[0] != "CMP" and line[0].split(" ")[0][0] == "C")):
             if (line[1] not in label_dict) and (line[1] != ""):
                 error_manager.add_error("Label: '{}' doesn't exist!".format(line[1]),line[2])
                 continue
@@ -112,15 +111,12 @@ n_code = 0
 n_data = data_dict.__len__()
 n_code = program_list.__len__()
 
-
-
 if(error_manager.get_num_errors() == 0):
 
     mem_file = open(file_name.replace(".txt", ".mem"), "w")
     write_data = utilities.sort_data(data_dict)
 
     for data in write_data:
-
         directory = int(data[0])
         data = int(data[1])
 

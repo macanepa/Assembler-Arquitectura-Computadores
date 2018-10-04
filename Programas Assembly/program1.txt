@@ -1,0 +1,53 @@
+DATA:
+    inicio 2
+    n 3
+    posi 0
+    posf 0
+    res 1
+
+CODE:
+    MOV A,(n)
+    SUB A,1
+    MOV (n),A
+
+    //Ubicacion inicio de palabra (indice -1)
+    MOV A,(inicio)
+    SUB A,1
+    MOV (posi),A
+
+    //Ubicacion termino de palabra (indice +1)
+    MOV A,(inicio)
+    ADD A,(n)
+    ADD A,1
+    MOV (posf),A
+
+    //Inicia el ciclo
+    ciclo:
+        MOV A,(posi)
+        ADD A,1
+        MOV (posi),A
+
+        MOV B,(posf)
+        SUB B,1
+        MOV (posf),B
+
+        //Si el contador de subida es mayor al de bajada significa que ya
+        //se compararon todas las letra y se termina el ciclo con Res (3) = 1
+        CMP A,B
+        JGT end
+
+
+        //Movemos a RegA y a RegB las letras a comparar
+        MOV B,(posi)
+        MOV A,(B)
+
+        MOV B,(posf)
+        MOV B,(B)
+
+        //Si letra en Reg A == Reg B => se sigue el ciclo
+        CMP A,B
+        JEQ ciclo
+
+    //de lo contrario la palabra no es palidromo => Res = 0
+    RST (res)
+    end:

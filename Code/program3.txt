@@ -1,0 +1,49 @@
+DATA:
+    Inicio 0        //Indica dónde se ubica el bit que corresponde al valor R del primer pixel
+    R 0             //Guarda la direccion de memoria donde se encuentra el valor R del pixel que se está analizando
+    G 0             //Guarda la direccion de memoria donde se encuentra el valor G del pixel que se está analizando
+    BL 0            //Guarda la direccion de memoria donde se encuentra el valor B del pixel que se está analizando
+    Filas 3         //Cantidad de filas que componen la imagen
+    Col 3           //Cantidad de columnas que componen la imagen
+    CR 0            //Guarda el conteo de pixeles rojos
+    N 0             //Cantidad de Pixeles que componen la imagen
+CODE:
+    MOV A,(Filas)       //Sumamos 1 vez la cantidad de filas en regA
+    MOV B,(Col)         //Guardamos en regB la cantidad de columnas
+    SUB B,1             //Restamos 1 a la cantidad de columnas, ya que ya se sumó una vez la cantidad de filas en A
+    mult:
+        MOV (N),A   //Guardamos en N el valor de A (cantidad de pixeles que llevamos multiplicados)
+        CMP B,0     //Vemos si hay más columnas para sumar
+        JGT mult    //Si regB es mayor a cero seguimos multiplicando (sumando filas)
+        JEQ mult3   //Si regB es cero ya tenemos la cantidad de pixeles guardada en N
+    mult3:
+        MOV A,(N)   //Guardamos en regA el valor de N correspondiente a la cantidad de pixeles
+        SHL A,A     //Multiplicamos por 2
+        ADD A,(N)   //Multiplicamos por 3 sumando N una vez
+        MOV (N),A   //Guardamos en N la cantidad de datos (N pixeles, 3 datos cada pixel: R,G,B)
+        JMP start1  //Comenzamos a analizar los datos
+    start1:
+        MOV A,(Inicio)  //Guardamos en A el R del primer pixel
+    start2:
+        MOV (R),A       //Guardamos en R el valor 'R' del pixel actual, que se encuentra en regA
+        ADD A,1         //Sumamos 1 a A
+        MOV (G),A       //Guardamos en G la direccion de memoria donde se encuentra el valor'G' del pixel actual
+        ADD A,1         //Sumamos 1 a A
+        MOV (BL),A      //Guardamos en BL la direccion de memoria donde se encuentra el valor 'B' del pixel actual
+        MOV A,(R)       //A toma el valor de la dirección de memoria guardada en R
+        CMP A,(G)       //Comparamos R con G del pixel actual
+        JLE sig         //Si el valor de R guardado en regA es menor o igual al valor de G salta al bloque 'sig' de código. NO SUMA A LA CANTIDAD DE PIXELES ROJOS.
+        CMP A,(BL)      //Si el valor de R guardado en regA es mayor a G, lo comparamos con B
+        JLE sig         //Si el valor de R guardado en regA es menor o igual al valor de B salta al bloque 'sig' de código. NO SUMA A LA CANTIDAD DE PIXELES ROJOS.
+        MOV B,(CR)      //Si el valor de R guardado en regA es mayor a ambos, guardamos la cantidad de pixeles rojos actual en regB
+        INC B           //Incrementamos en 1 la cantidad de pixeles rojos
+        MOV (CR),B      //Guardamos en CR la cantidad actual de pixeles rojos
+        JMP sig         //Saltamos al bloque 'sig'
+    sig:
+        MOV A,(BL)      //Guardamos en regA el número de registro donde se encuentra el valor 'B' del último pixel analizado
+        CMP A,(N)       //Comparamos la útima posición de memoria analizada con el número de datos (el numero de datos es la cantidad de pixeles multiplicada por 3)
+        JEQ end         //Si hemos llegado al último dato (valor de B del ultimo pixel), terminamos
+        ADD A,1         //Si no hemos llegado al ultimo dato, sumamos 1 a regA, que corresponde al valor R del pixel siguiente
+        JMP start2      //Vamos a analizar el siguiente pixel
+    end:
+        MOV A,(CR)      //Guardamos en regA el número de pixeles rojos de la imagen

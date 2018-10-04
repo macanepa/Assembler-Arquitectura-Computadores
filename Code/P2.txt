@@ -1,0 +1,5 @@
+DATA:
+    N 0
+CODE:
+    MOV A,0
+    JMP cl
