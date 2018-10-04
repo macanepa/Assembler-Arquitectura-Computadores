@@ -145,8 +145,10 @@ def import_program(file_name):
 
         # print "PC:", str(pc) + " -", out_line
 
-        if(out_line.startswith("J")):
+        if(out_line.startswith("J") or out_line.startswith("CALL")):
             out_line_split = out_line.split(" ")
+            # if (out_line_split[0][0] == "C" and out_line_split[0] == "CALL"):
+            #     print out_line_split
             # print out_line_split
             out_line = out_line_split[0] + " DIR"
             content = out_line_split[1]

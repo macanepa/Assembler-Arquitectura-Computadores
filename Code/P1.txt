@@ -1,10 +1,17 @@
 DATA:
-    a 0
-    b 3
-
-    c 4
+    a 1
+    b 11
 CODE:
-    MOV A,B
-    MOV A,(b)
-    MOV (a),A
-    MOV (1),B
+    MOV A,(200)
+    MOV B,20
+    PUSH A
+    PUSH B
+    CALL ciclo
+    CMP A,B
+    JMP end
+ciclo:
+    POP A
+    ADD A,3
+    PUSH A
+    RET
+end:RET

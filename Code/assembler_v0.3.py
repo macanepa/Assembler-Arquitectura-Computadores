@@ -42,7 +42,7 @@ for line in program_list:
 
 
 
-        if (line[0][0] == "J"):
+        if (line[0][0] == "J" or line[0][0] == "C"):
             if (line[1] not in label_dict) and (line[1] != ""):
                 error_manager.add_error("Label: '{}' doesn't exist!".format(line[1]),line[2])
                 continue
@@ -56,8 +56,22 @@ for line in program_list:
             flag = True
 
             # Manage Labels
+
+
+
             if (line[1].strip('D').isdigit()):
                 lit = int(line[1].strip('D'))
+
+                # Error in case the DIR literal is larger than 8 bit
+                if (line[1][-1] == 'D'):
+                    if (int(line[1].strip('D'))<0) or (int(line[1].strip('D'))>255):
+                        error_manager.add_error("DIR out of range!", line[2])
+
+                # Error in case the literal is larger than 8 bit
+                else:
+                    if (int(line[1])<-128) or (int(line[1])>127):
+                        error_manager.add_error("Literal out of range!", line[2])
+
 
                 if(line[1] != ''):
                     if(line[1][-1] == 'D'):
@@ -75,12 +89,12 @@ for line in program_list:
 
 
 
-            # Error in case the literal is larger than 8 bit
 
-            if (lit > 256):
-                error_manager.add_error("Literal out of range!",line[2])
             lit = '{0:07b}'.format(int(lit))
-            out_string += "{}_{}".format(str(lit),str(opcode[1]))+"\n"
+
+            list = opcode[1].split("\\n")
+            for opc in list:
+                out_string += "{}_{}".format(str(lit),str(opc))+"\n"
             n_out+=1
             break
 
