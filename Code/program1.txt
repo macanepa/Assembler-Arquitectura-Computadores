@@ -1,68 +1,53 @@
+DATA:
+    inicio 2
+    n 3
+    posi 0
+    posf 0
+    res 1
 
-//Asignar palabra letra por letra en memoria
-MOV A,#0x72 //R #0x72 = 114
-MOV (#0xA),A // #0xA = 10
-MOV A,97 //A
-MOV (11),A
-MOV A,100 //D
-MOV (12),A
-MOV A,97 //A
-MOV (13),A
-MOV A,114 //R
-MOV (14),A
+CODE:
+    MOV A,(n)
+    SUB A,1
+    MOV (n),A
 
-//Ubicacion inicio de palabra (indice -1)
-MOV A,9
-MOV (1),A
+    //Ubicacion inicio de palabra (indice -1)
+    MOV A,(inicio)
+    SUB A,1
+    MOV (posi),A
 
-//Ubicacion termino de palabra (indice +1)
-MOV A,15
-MOV (2),A
-
-//Variable Res
-MOV A,1
-MOV (3),A
-
-//Asigna al contador de subida (4) el indice de subida (1)
-MOV A,(1)
-MOV (4),A
-
-//Asigna al contador de bajada (5) el indice de bajada (2)
-MOV A,(2)
-MOV (5),A
-
-//Ni idea esto
-MOV A,0
-MOV (6),A
-MOV (7),A
-
-//Inicia el ciclo
-ciclo:
-    MOV A,(4)
+    //Ubicacion termino de palabra (indice +1)
+    MOV A,(inicio)
+    ADD A,(n)
     ADD A,1
-    MOV B,(5)
-    SUB B,1
+    MOV (posf),A
 
-    //Si el contador de subida es mayor al de bajada significa que ya
-    //se compararon todas las letra y se termina el ciclo con Res (3) = 1
-    CMP A,B
-    JGT end
+    //Inicia el ciclo
+    ciclo:
+        MOV A,(posi)
+        ADD A,1
+        MOV (posi),A
 
-    MOV A,(4)
-    ADD A,1
-    MOV (4),B
-    MOV A,(B)
-    MOV B,(5)
-    SUB B,1
-    MOV (5),B
-    MOV B,(B)
+        MOV B,(posf)
+        SUB B,1
+        MOV (posf),B
 
-    //Si letra en Reg A == Reg B => se sigue el ciclo
-    CMP A,B
-    JEQ ciclo
+        //Si el contador de subida es mayor al de bajada significa que ya
+        //se compararon todas las letra y se termina el ciclo con Res (3) = 1
+        CMP A,B
+        JGT end
 
-//de lo contrario la palabra no es palidromo => Res (3) = 0
-MOV B,0
-MOV (3),B
 
-end:
+        //Movemos a RegA y a RegB las letras a comparar
+        MOV B,(posi)
+        MOV A,(B)
+
+        MOV B,(posf)
+        MOV B,(B)
+
+        //Si letra en Reg A == Reg B => se sigue el ciclo
+        CMP A,B
+        JEQ ciclo
+
+    //de lo contrario la palabra no es palidromo => Res = 0
+    RST (res)
+    end:

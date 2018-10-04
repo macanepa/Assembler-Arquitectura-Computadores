@@ -12,8 +12,8 @@ opcodes_list = utilities.import_opcodes("opcode.txt")
 # import program to compile
 while True:
     try:
-        # file_name= raw_input("Insert name of file: ")
-        file_name = "P1.txt"
+        file_name= raw_input("Insert name of file: ")
+        # file_name = "P1.txt"
         # file_name = "producto_punto.txt"
         file = open(file_name, "r")
     except:
